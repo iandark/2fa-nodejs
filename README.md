@@ -1,9 +1,9 @@
-## 2FA with NodeJS
+# 2FA with NodeJS
 
 
 Simple application to implement 2FA with NodeJS
 
-## Reference
+### Reference
 
 This code is a fork from a repo by [Kanayama](https://github.com/askmon), thanks man for your great lessons!  :thumbsup:
 
@@ -19,10 +19,10 @@ Rename the file `.env.example` to `.env`
 
 ### Available commands
 
-| Command                      | Description                                                                                |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `npm install`                | It installs the dependations inside package.json, and creates the `.node_modules` folder   |
-| `docker-compose up`          | To create your local PostgreSQL database with docker compose                               |
-| `npm run sequelize:migrate`  | To create the tables                                                                       |
-| `npm run sequelize:seed`     | To create the data for the tables                                                          |
-| `npm run dev`                | To run the prokect using nodemon                                                           |
+| Command                           | Description                                                                              |
+| --------------------------------- | ---------------------------------------------------------------------------------------- |
+| `npm install`                     | It installs the dependations inside package.json, and creates the `.node_modules` folder |
+| `docker-compose up`               | To create your local PostgreSQL database with docker compose                             |
+| `npm run sequelize:migrate`       | To create the tables                                                                     |
+| `npm run sequelize:seed`          | To create the data for the tables                                                        |
+| `npm run dev`                     | To run the prokect using nodemon                                                         |
