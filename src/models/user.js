@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     role: DataTypes.STRING,
+    twoFaEnabled: DataTypes.STRING,
+    twoFaSecret: DataTypes.BOOLEAN,
+    recoveryCode: DataTypes.STRING,
   }
   const modelOptions = {
     tableName: 'users',

@@ -24,8 +24,15 @@ const logout = async ctx => {
   ctx.body = {}
 }
 
+const generateQrCode = async ctx => {
+  const qrCode = await auth.generateQrCode(ctx.state.userId);
+
+  ctx.body = `<img src=${qrCode}>`
+}
+
 module.exports = {
   authenticate,
   refreshToken,
   logout,
+  generateQrCode,
 }

@@ -1,6 +1,8 @@
 const users = require('./user')
 const crypto = require('./crypto')
 const tokenService = require('./token')
+const otplib = require('otplib')
+const qrcode = require('qrcode')
 
 // illustration purposes only
 // for production-ready code, use error codes/types and a catalog (maps codes -> responses)
@@ -56,8 +58,22 @@ const logout = async ({ token, allDevices }) => {
   return tokenService.invalidateRefreshToken(token)
 }
 
+const generateQrCode = async userId => {
+  const secret = otplib.authenticator.generateSecret()
+  console.log(secret);
+
+  await users.addTwoFASecret(userId, secret)
+
+  const otpAuth = otplib.authenticator.keyuri(userId, 'Example', secret)
+
+  console.log(otpAuth)
+
+  return qrcode.toDataURL(otpAuth)
+}
+
 module.exports = {
   authenticate,
   refreshToken,
   logout,
+  generateQrCode,
 }
