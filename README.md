@@ -26,3 +26,7 @@ Rename the file `.env.example` to `.env`
 | `npm run sequelize:migrate`       | To create the tables                                                                     |
 | `npm run sequelize:seed`          | To create the data for the tables                                                        |
 | `npm run dev`                     | To run the prokect using nodemon                                                         |
+
+### Postman collection
+
+You can get the postman collection for this project [here](https://gist.github.com/iandark/584ee9f0582aeec6939d0aaf285748e4)
