@@ -14,7 +14,7 @@ const authFailed = () => Promise.reject({
   message: 'Failed to authenticate',
 })
 
-const authenticate = async ({ email, password }) => {
+const authenticate = async ({ email, password, twoFactorToken }) => {
   const user = await users.findByEmail(email)
   if (!user) {
     return authFailed()
@@ -23,6 +23,22 @@ const authenticate = async ({ email, password }) => {
   if (!isMatch) {
     return authFailed()
   }
+
+  if(user.twoFaEnabled && !twoFactorToken) {
+    return { twoFactorEnabled: true }
+  }
+
+  if(user.twoFaEnabled) {
+    const isTwoFactorTokenValid = otplib.authenticator.verify({
+      token: twoFactorToken,
+      secret: user.twoFaSecret
+    })
+
+    if(!isTwoFactorTokenValid) {
+      return authFailed()
+    }
+  }
+
   const { token: refreshToken, expiresAt: refreshTokenExpiration } = await tokenService.createRefreshToken(user.id)
   return {
     refreshToken,
@@ -60,15 +76,23 @@ const logout = async ({ token, allDevices }) => {
 
 const generateQrCode = async userId => {
   const secret = otplib.authenticator.generateSecret()
-  console.log(secret);
 
   await users.addTwoFASecret(userId, secret)
 
-  const otpAuth = otplib.authenticator.keyuri(userId, 'Example', secret)
-
-  console.log(otpAuth)
+  const otpAuth = otplib.authenticator.keyuri(userId, process.env.APP_NAME, secret)
 
   return qrcode.toDataURL(otpAuth)
+}
+
+const activateTwoFactor = async (userId, token) => {
+  const { twoFaSecret: secret } = await users.findById(userId)
+
+  if(otplib.authenticator.verify({token, secret})) {
+    await users.activateTwoFactor(userId)
+    return true
+  } else {
+    return Promise.reject('Wrong token')
+  }
 }
 
 module.exports = {
@@ -76,4 +100,5 @@ module.exports = {
   refreshToken,
   logout,
   generateQrCode,
+  activateTwoFactor,
 }

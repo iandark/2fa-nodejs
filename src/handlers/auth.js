@@ -1,11 +1,16 @@
 const auth = require('../services/auth')
 
 const authenticate = async ctx => {
-  const { email, password } = ctx.request.body
-  const { accessToken, refreshToken, refreshTokenExpiration } = await auth.authenticate({ email, password })
-  ctx.cookies.set('refreshToken', refreshToken, { httpOnly: true, expires: refreshTokenExpiration })
-  ctx.body = {
-    accessToken,
+  const { email, password, twoFactorToken } = ctx.request.body
+  const { accessToken, refreshToken, refreshTokenExpiration, twoFactorEnabled } = await auth.authenticate({ email, password, twoFactorToken })
+
+  if(!accessToken && twoFactorEnabled) {
+    ctx.body = { twoFactorEnabled }
+  } else {
+    ctx.cookies.set('refreshToken', refreshToken, { httpOnly: true, expires: refreshTokenExpiration })
+    ctx.body = {
+      accessToken,
+    }
   }
 }
 
@@ -30,9 +35,16 @@ const generateQrCode = async ctx => {
   ctx.body = `<img src=${qrCode}>`
 }
 
+const activateTwoFactor = async ctx => {
+  const { token } = ctx.request.body
+  return auth.activateTwoFactor(ctx.state.userId, token)
+    .then(ctx.body = { activate: true })
+}
+
 module.exports = {
   authenticate,
   refreshToken,
   logout,
   generateQrCode,
+  activateTwoFactor
 }
