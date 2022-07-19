@@ -25,7 +25,7 @@ Rename the file `.env.example` to `.env`
 | `docker-compose up`               | To create your local PostgreSQL database with docker compose                             |
 | `npm run sequelize:migrate`       | To create the tables                                                                     |
 | `npm run sequelize:seed`          | To create the data for the tables                                                        |
-| `npm run dev`                     | To run the prokect using nodemon                                                         |
+| `npm run dev`                     | To run the project using nodemon                                                         |
 
 ### Postman collection
 
